@@ -1,0 +1,41 @@
+{% extends 'emsapp/ems_base.html' %}
+
+{% block body %}
+<form action="" method="post">
+    
+    {% if messages %}
+     {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+     {% endfor %}
+    {% endif %}
+
+    {% csrf_token %}
+<section class="container rounded" style="height:670px;">
+    <div class="container py-5 h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 ">
+                <div class="card shadow-2-strong " style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <form action="",method="POST">
+                            {% csrf_token %}
+                        <h3 class="mb-5">Sign in</h3>
+                        <div data-mdb-input-init class="form-outline mb-4 text-start">
+                            <input type="text" id="typeEmailX-2" name="username" class="form-control form-control-lg" />
+                            <label class="form-label" for="typeEmailX-2">Username</label>
+                        </div>
+                        <div data-mdb-input-init class="form-outline mb-4 text-start">
+                            <input type="password" id="typePasswordX-2" name="password" class="form-control form-control-lg" />
+                            <label class="form-label" for="typePasswordX-2">Password</label>
+                        </div>
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+                            type="submit">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</form>
+
+{% endblock %}

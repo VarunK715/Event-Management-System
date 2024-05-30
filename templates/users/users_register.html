@@ -1,0 +1,98 @@
+{% extends 'emsapp/ems_base.html' %}
+{%load static%}
+
+{% block head %}
+<style>
+    select::-ms-expand {
+        display: none;
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+
+<section class="container mt-5 ">
+    <div class="container ">
+        <div class="row d-flex justify-content-center align-items-center ">
+            <div class="card  text-black shadow p-2 bg-body-tertiary rounded">
+                <div class="row justify-content-center ms-1 ">
+                    <div class="col-md-10 col-lg-6 col-xl-6 order-2 order-lg-1 ">
+                        <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-4 mt-4">
+                            Create An Account
+                        </p>
+                        <form class="mx-1 mx-md-4" method="post" action="">
+                            {% csrf_token %}
+                            <div class="d-flex flex-row align-items-center mb-2">
+                                <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                    <input type="text" id="form3Example1c" name="username" class="form-control" />
+                                    <label class="form-label ms-1" for="form3Example1c">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row align-items-center mb-2">
+                                <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                    <input type="email" id="form3Example3c" name="u_email" class="form-control" />
+                                    <label class="form-label ms-1" for="form3Example3c">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row align-items-center mb-2">
+                                <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                    <input type="password" id="form3Example4c" name="password" class="form-control" />
+                                    <label class="form-label ms-1" for="form3Example4c">Password</label>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row align-items-center mb-2">
+                                <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                    <input type="password" id="form3Example4cd" name="password1" class="form-control" />
+                                    <label class="form-label ms-1" for="form3Example4cd">Repeat your
+                                        password</label>
+                                </div>
+                            </div>
+                            <div class="ms-3 btn-group p-1 border border-dark mb-4">
+                                <select class="" name="role" id="cars" style="border:none;background-color: transparent;">
+                                    <option value="" disabled selected>Choose Role</option>
+                                    <option value="organizer">Organizer</option>
+                                    <option value="participant">Participant</option>
+                                </select>
+                            </div>
+
+                            <div class="d-flex justify-content-center mx mb-3 ms-3 mb-lg-4 border rounded bg-primary">
+                                <button type="submit" data-mdb-button-init data-mdb-ripple-init
+                                    class="btn btn-md fw-bold">
+                                    Register
+                                </button>
+                            </div>
+                            <p class="text-center text-muted">
+                                Have already an account?
+                                <a href="{% url 'users_login' %}" class="fw-bold text-body"><u>Login
+                                        here</u></a>
+                            </p>
+                        </form>
+                    </div>
+                    <div class="col-md-10 col-lg-6 col-xl-6 d-flex align-items-center order-1 order-lg-2">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                            class="img-fluid h-100" alt="Sample image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--
+<div class="container border border-dark">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign Up</button>
+    </form>
+</div>-->
+{% endblock %}

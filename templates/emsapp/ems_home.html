@@ -1,0 +1,295 @@
+{% extends 'emsapp/ems_base.html' %}
+{% load static %}
+{% block title %} Home -{% endblock %}
+
+{% block head %}
+<style>
+   /* Custom CSS */
+   body {
+      background-color: #f8f9fa;
+   }
+
+   .card {
+      border-radius: 10px;
+      box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+   }
+
+   .category-list {
+      border-radius: 10px;
+   }
+
+   .category-list .list-group-item {
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+   }
+
+   .category-list .list-group-item:hover {
+      background-color: #f8f9fa;
+   }
+
+   .search-form {
+      border-radius: 20px;
+   }
+
+   .event-form {
+      display: none;
+   }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container d-flex">
+   <!-- Modal -->
+   {% if request.user.is_authenticated %}
+      {% if request.user.role == "organizer" %}
+   <button type="button" class="btn btn-success mt-3" data-toggle="modal" data-target="#addEventModal">Add
+      Event</button>
+      {% endif %}
+   <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
+               <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <form action="{% url 'event_home' %}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="form-group mb-3">
+                     <label for="eventName">Event Name</label>
+                     <input type="text" name="eventname" class="form-control" id="eventName">
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="eventType">Event Type</label>
+                     <select class="form-control" name="eventtype" id="eventType">
+                        <option value="Technology">Technology</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Music">Music</option>
+                        <option value="Art & Culture">Art & Culture</option>
+                        <option value="Business">Business</option>
+                        <option value="Education">Education</option>
+                        <option value="Food & Drink">Food & Drink</option>
+                     </select>
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="eventDate">Event Date</label>
+                     <input type="date" name="eventdate" class="form-control" id="eventDate">
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="eventLocation">Event Location</label>
+                     <input type="text" name="eventlocation" class="form-control" id="eventLocation">
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="eventDescription">Event Description</label>
+                     <textarea class="form-control" name="eventdescription" id="eventDescription" rows="3"></textarea>
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="registrationDeadline">Registration Deadline</label>
+                     <input type="datetime-local" name="eventregdeadline" class="form-control"
+                        id="registrationDeadline">
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="maxCapacity">Maximum Capacity</label>
+                     <input type="number" class="form-control" name="eventmaxcapacity" id="maxCapacity"
+                        placeholder="Enter maximum capacity">
+                  </div>
+                  <div class="form-group mb-3">
+                     <label for="eventImage">Event Image</label>
+                     <input type="file" class="form-control-file" name="eventimage" id="eventImage">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+   {% endif %}
+
+
+<div class="container mt-3 border">
+   <div class="row">
+      <!-- Left Content Area -->
+      <div class="col-md-9">
+         <h3>Latest Events</h3>
+         {% if page_obj.object_list|length == 0 %}
+         <div class="card mb-3">
+            <h4 class="p-3 text-muted mt-3">Please add Event </h4>   
+         </div>
+         {% endif %}
+         {% for data in page_obj.object_list %}
+         <div class="card mb-3">
+            <img src="{% static 'HOME-CONCERT-2.jpg' %}" alt="..." class="card-img-top img-fluid" style="max-width: 100%; height: auto; width: 100%; max-height: 300px;">
+            <div class="card-body">
+               <h5 class="card-title">{{data.event_name}}</h5>
+               <p class="card-text">{{data.event_description}}</p>
+            </div>
+            <div class="card-footer">
+               <div class="row">
+                  <div class="col">
+                     <small class="text-body-secondary fw-bold">Date : {{data.event_date | date:'Y-m-d' }}</small>
+                  </div>
+                  <div class="col">
+                     <small class="text-body-secondary fw-bold">Place : {{data.event_location}}</small>
+                  </div>
+                  {% if request.user.is_authenticated %}
+                     {% if request.user.role == "organizer" %}
+                  <div class="col">
+                     <button type="button" class="btn btn-primary btn-sm float-end" data-toggle="modal" data-target="#UpdateEventModal">
+                        Update</button>
+                 </div>
+                     {% endif %} 
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+
+         <!-- Repeat the above card structure for more events -->
+      </div>
+      <!-- Right Sidebar -->
+      <div class="col-md-3 border">
+         <h3>Event Categories</h3>
+         <div class="card category-list">
+            <ul class="list-group list-group-flush">
+               <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='latest' %}" class="text-decoration-none">Latest</a>
+               </li>
+               <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='tomorrow' %}" class="text-decoration-none">Tomorrow's Event</a>
+               </li>
+               <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Technology' %}" class="text-decoration-none">Technology</a>
+               </li>
+            </li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Wedding' %}" class="text-decoration-none">Wedding</a></li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Sports' %}" class="text-decoration-none">Sports</a></li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Music' %}" class="text-decoration-none">Music</a></li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Art & Culture' %}" class="text-decoration-none">Art &
+                  Culture</a></li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Business' %}" class="text-decoration-none">Business</a>
+            </li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Education' %}" class="text-decoration-none">Education</a>
+            </li>
+            <li class="list-group-item border-bottom"><a href="{% url 'app_event_type' event_type='Food & Drink' %}" class="text-decoration-none">Food & Drink</a>
+            </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+</div>
+
+ <!-- Pagination -->
+ <div class="pagination justify-content-center">
+   <ul class="pagination mt-2">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+         <a class="page-link" href="?page=1">&laquo; First</a>
+      </li>
+      <li class="page-item">
+         <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+         <span class="page-link">First</span>
+      </li>
+      <li class="page-item disabled">
+         <span class="page-link">Previous</span>
+      </li>
+      {% endif %}
+
+      <li class="page-item active">
+         <span class="page-link">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+         </span>
+      </li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+         <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+      </li>
+      <li class="page-item">
+         <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+         <span class="page-link">Next</span>
+      </li>
+      <li class="page-item disabled">
+         <span class="page-link">Last</span>
+      </li>
+      {% endif %}
+   </ul>
+</div>
+
+<!--update model-->
+<div class="modal fade" id="UpdateEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addEventModalLabel">Update Event</h5>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            {% for data in page_obj.object_list %}
+            <form action="#" method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group mb-3">
+                  <label for="eventName">Event Name</label>
+                  <input type="text" name="eventname" class="form-control" value="{{data.event_name}}" id="eventName">
+               </div>
+               <div class="form-group mb-3">
+                  <label for="eventType">Event Type</label>
+                  <select class="form-control" name="eventtype" id="eventType">
+                     <option value="Technology">Technology</option>
+                     <option value="Wedding">Wedding</option>
+                     <option value="Sports">Sports</option>
+                     <option value="Music">Music</option>
+                     <option value="Art & Culture">Art & Culture</option>
+                     <option value="Business">Business</option>
+                     <option value="Education">Education</option>
+                     <option value="Food & Drink">Food & Drink</option>
+                  </select>
+               </div>
+               <div class="form-group mb-3">
+                  <label for="eventDate">Event Date</label>
+                  <input type="date" name="eventdate" class="form-control" id="eventDate">
+               </div>
+               <div class="form-group mb-3">
+                  <label for="eventLocation">Event Location</label>
+                  <input type="text" name="eventlocation" class="form-control" id="eventLocation">
+               </div>
+               <div class="form-group mb-3">
+                  <label for="eventDescription">Event Description</label>
+                  <textarea class="form-control" name="eventdescription" id="eventDescription" rows="3"></textarea>
+               </div>
+               <div class="form-group mb-3">
+                  <label for="registrationDeadline">Registration Deadline</label>
+                  <input type="datetime-local" name="eventregdeadline" class="form-control"
+                     id="registrationDeadline">
+               </div>
+               <div class="form-group mb-3">
+                  <label for="maxCapacity">Maximum Capacity</label>
+                  <input type="number" class="form-control" name="eventmaxcapacity" id="maxCapacity"
+                     placeholder="Enter maximum capacity">
+               </div>
+               <div class="form-group mb-3">
+                  <label for="eventImage">Event Image</label>
+                  <input type="file" class="form-control-file" name="eventimage" id="eventImage">
+               </div>
+               <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   document.getElementById('addEventBtn').addEventListener('click', function () {
+      document.querySelector('.event-form').style.display = 'block';
+   });
+</script>
+
+{% block footer %}
+{% endblock %}
+
+{% endblock %}

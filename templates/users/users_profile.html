@@ -1,0 +1,186 @@
+{% extends 'emsapp/ems_base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Profile -{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background: rgb(99, 39, 120)
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+
+    .profile-button {
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+    }
+
+    .profile-button:hover {
+        background: #682773
+    }
+
+    .profile-button:focus {
+        background: #682773;
+        box-shadow: none
+    }
+
+    .profile-button:active {
+        background: #682773;
+        box-shadow: none
+    }
+
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+
+    .labels {
+        font-size: 11px
+    }
+
+    .add-experience:hover {
+        background: #BA68C8;
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #BA68C8
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div>
+     
+    {% if messages %}
+     {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+     {% endfor %}
+    {% endif %}
+
+    <div class="container rounded bg-white mt-5 mb-1">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
+                        width="150px"
+                        src="{{ user.profile.image.url }}">
+                    <span class="font-weight-bold mt-2">{{user}}</span><span
+                        class="text-black-50">{{user.email}}</span><span> </span>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="p-3 py-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mt-3 ms-4">
+                        <h4 class="text-right">Profile Settings</h4>
+                        <button type="button" class="btn btn-primary btn-sm float-end" data-toggle="modal"
+                            data-target="#UpdateProfile">
+                            Update Profile</button>
+                    </div>
+                    <div class="row ms-4 mt-3">
+                        <div class="card p-2 mt-3">
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.role == "organizer" %}
+                            <div class="card-body">
+                                <h5 class="card-title">Profile Information</h5>
+                                {% for data in user_profile_data %}
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Bio :  {{data.bio}}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Organization : {{data.organization}}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>Phone : {{data.phone}}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Work : {{data.work}}</strong>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="card-body">
+                                <h5 class="card-title">Profile Information</h5>
+                                {% for data in user_profile_data %}
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Bio : {{data.bio}}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Phone : {{data.phone}}</strong>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item border-0">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong class="text-capitalize">Work : {{data.work}}</strong>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  <div class="col-md-4">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span class="border px-3 p-1 add-experience"><i class="fa fa-plus"></i>&nbsp;Experience</span></div><br>
+                    <div class="col-md-12"><label class="labels">Experience in Designing</label><input type="text" class="form-control" placeholder="experience" value=""></div> <br>
+                    <div class="col-md-12"><label class="labels">Additional Details</label><input type="text" class="form-control" placeholder="additional details" value=""></div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+    <!--update profile model-->
+    <div class="modal fade" id="UpdateProfile" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+           <div class="modal-content">
+              <div class="modal-header">
+                 <h5 class="modal-title" id="addEventModalLabel">Update Profile</h5>
+                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                 <form class="border p-3" action="{% url 'user_profile' %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.role == "organizer" %}
+                    {{O_form|crispy}}
+                    <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="o_save" type="submit">Save
+                        Profile</button></div>
+                    {% else %}
+                    {{P_form|crispy}}
+                    <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="p_save" type="submit">Save
+                        Profile</button></div>
+                    {% endif %}
+                    {% endif %}
+                </form>
+              </div>
+           </div>
+        </div>
+     </div>
+</div>
+
+
+
+
+
+{% block footer %}
+
+{% endblock %}
+{% endblock %}
