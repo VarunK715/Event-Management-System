@@ -1,5 +1,9 @@
 {% extends 'emsapp/ems_base.html' %}
 
+{% block head %}
+    
+{% endblock head %}
+
 {% block body %}
 <form action="" method="post">
     
@@ -10,7 +14,7 @@
     {% endif %}
 
     {% csrf_token %}
-<section class="container rounded" style="height:670px;">
+<section class="container rounded mt-5" style="height:670px;">
     <div class="container py-5 h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5 ">

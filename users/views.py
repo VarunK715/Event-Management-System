@@ -4,6 +4,9 @@ from django.contrib import messages
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.decorators import login_required
 from users.forms import UserOForm,UserPForm
+from app_ems.models import EventInfo
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+
 
 def user_register(request):
     if request.method == 'POST':
@@ -79,13 +82,24 @@ def user_profile(request):
     else:
         o_form = UserOForm(instance=profile)
         p_form  = UserPForm(instance=profile)
-
+        
     user_profile_data = Profile.objects.filter(user=request.user)
+
     return render(request,'users/users_profile.html',{'O_form':o_form,'P_form':p_form,'user_profile_data':user_profile_data})
 
 
-#created using built in django forms
-# def signup(request):
-#     form = SingUpForm()
-#     return render(request,'users/users_register.html',{'form':form})
+def user_dashboard(request):
 
+    event_data = EventInfo.objects.filter(user=request.user).order_by('-event_date')
+            # Implement pagination for event data
+    paginator = Paginator(event_data,2)  # Show No.of events per page
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.get_page(page_number)  # returns the desired page object
+    except PageNotAnInteger:
+                # if page_number is not an integer then assign the first page
+        page_obj = paginator.page(1)
+    except EmptyPage:
+                # if page is empty then return last page
+        page_obj = paginator.page(paginator.num_pages)
+    return render(request,'users/user_dashboard.html',{'page_obj':page_obj})
