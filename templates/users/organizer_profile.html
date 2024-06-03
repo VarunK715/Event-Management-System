@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %} Profile -{% endblock %}
+{% block title %} OProfile -{% endblock %}
 {% block head %}{% endblock head %}
 
 {% block body %}
@@ -26,8 +26,6 @@
                 </div>
                 <div class="row ms-4 mt-3">
                     <div class="card p-2 mt-3">
-                        {% if request.user.is_authenticated %}
-                        {% if request.user.role == "organizer" %}
                         <div class="card-body">
                             {% for data in user_profile_data %}
                             <ul class="list-group list-group-flush">
@@ -56,33 +54,6 @@
                             </ul>
                             {% endfor %}
                         </div>
-                        {% else %}
-                        <div class="card-body">
-                            <h5 class="card-title">Profile Information</h5>
-                            {% for data in user_profile_data %}
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item border-0">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <strong class="text-capitalize">Bio : {{data.bio}}</strong>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border-0">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <strong class="text-capitalize">Phone :
-                                            {{data.phone}}</strong>
-                                    </div>
-                                </li>
-                                <li class="list-group-item border-0">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <strong class="text-capitalize">Work :
-                                            {{data.work}}</strong>
-                                    </div>
-                                </li>
-                            </ul>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -96,22 +67,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="border p-3" action="{% url 'user_profile' %}" enctype="multipart/form-data"
+                    <form class="border p-3" action="{% url 'organizer_profile' %}" enctype="multipart/form-data"
                         method="POST">
                         {% csrf_token %}
-                        {% if request.user.is_authenticated %}
-                        {% if request.user.role == "organizer" %}
                         {{O_form|crispy}}
                         <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="o_save"
                                 type="submit">Save
                                 Profile</button></div>
-                        {% else %}
-                        {{P_form|crispy}}
-                        <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="p_save"
-                                type="submit">Save
-                                Profile</button></div>
-                        {% endif %}
-                        {% endif %}
                     </form>
                 </div>
             </div>

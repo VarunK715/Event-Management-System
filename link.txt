@@ -1,227 +1,158 @@
-
-<div class="container-fluid mt-1">
-    <div class="row">
-        <!-- Left Sidebar -->
-        <div class="col-md-2 p-0">
-            <div class="bg-light" style="height:745px;">
-                <div class="d-flex flex-column align-items-start p-3">
-                    <ul class="nav flex-column mt-5">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" onclick="showProfile()">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="showDashboard()">Dashboard</a>
-                        </li>
-                    </ul>
+<div class="card mb-3" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="d-flex align-items-center">
+                <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
+                    style="width:55px;">
+                <div>
+                    <h5 class="card-title mb-0">{{ user }}</h5>
+                    <small class="text-muted">Posted {{ data.created_at|timesince }} ago</small>
                 </div>
             </div>
+            <div class="text-right me-3">
+                <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
+            </div>
         </div>
-
-        <!-- Vertical Line -->
-
-        <!-- Right Content Area -->
-        <div class="col-md-9 border border-danger" style="width:83%;">
-            <div class="p-2">
-                <!-- Profile Information -->
-                <div id="profile" class="content-section">
-                    <!-- Your existing profile information code goes here -->
-                    <div class="container rounded  border bg-white mt-5 mb-1">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
-                                        class="rounded-circle mt-5" width="150px" src="{{ user.profile.image.url }}">
-                                    <span class="font-weight-bold mt-2">{{user}}</span><span
-                                        class="text-black-50">{{user.email}}</span><span> </span>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <div class="p-3 py-4">
-                                    <div class="d-flex justify-content-between align-items-center mb-3 mt-3 ms-4">
-                                        <h4 class="text-right card-title">Profile Information</h4>
-                                        <button type="button" class="btn btn-primary btn-sm float-end"
-                                            data-toggle="modal" data-target="#UpdateProfile">
-                                            Update Profile</button>
-                                    </div>
-                                    <div class="row ms-4 mt-3">
-                                        <div class="card p-2 mt-3">
-                                            {% if request.user.is_authenticated %}
-                                            {% if request.user.role == "organizer" %}
-                                            <div class="card-body">
-                                                {% for data in user_profile_data %}
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Bio : {{data.bio}}</strong>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Organization :
-                                                                {{data.organization}}</strong>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong>Phone : {{data.phone}}</strong>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Work :
-                                                                {{data.work}}</strong>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                {% endfor %}
-                                            </div>
-                                            {% else %}
-                                            <div class="card-body">
-                                                <h5 class="card-title">Profile Information</h5>
-                                                {% for data in user_profile_data %}
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Bio : {{data.bio}}</strong>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Phone :
-                                                                {{data.phone}}</strong>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-group-item border-0">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <strong class="text-capitalize">Work :
-                                                                {{data.work}}</strong>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+        <div class="container  pt-1">
+            <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
+            <h5 class="card-title">{{ data.event_name }}</h5>
+            <p class="card-text">{{ data.event_description }}</p>
+            <div class="row">
+                <div class="col mb-2">
+                    <p class="mb-0 fw-bold">Date : {{ data.event_date | date:'Y-m-d' }}</p>
                 </div>
-
-                <!-- Dashboard Content (Hidden by Default) -->
-                <div id="dashboard" class="content-section d-none border border-success">
-                        {% for data in page_obj.object_list %}
-                        <div class="row row-cols-1 row-cols-md-2 g-4 m-1 border border-warning">
-                            <div class="col">
-                                <div class="card ">
-                                    <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{data.event_name}}</h5>
-                                        <p class="card-text">{{data.event_description}}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="row">
-                                            <div class="col mb-2">
-                                                <p class="mb-0 fw-bold">Date : {{data.event_date | date:'Y-m-d' }}</p>
-                                            </div>
-                                            <div class="col">
-                                                <p class="mb-0 fw-bold">Location : {{data.event_location}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
-                        {% endfor %}                    
+                <div class="col">
+                    <p class="mb-0 fw-bold">Location : {{ data.event_location }}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="UpdateProfile" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addEventModalLabel">Update Profile</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="border p-3" action="{% url 'user_profile' %}" enctype="multipart/form-data"
-                        method="POST">
-                        {% csrf_token %}
-                        {% if request.user.is_authenticated %}
-                        {% if request.user.role == "organizer" %}
-                        {{O_form|crispy}}
-                        <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="o_save"
-                                type="submit">Save
-                                Profile</button></div>
-                        {% else %}
-                        {{P_form|crispy}}
-                        <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="p_save"
-                                type="submit">Save
-                                Profile</button></div>
-                        {% endif %}
-                        {% endif %}
-                    </form>
-                </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="eventModal{{ data.id }}" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">{{ data.event_name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
+                <p>{{ data.event_description }}</p>
+                <p>Date: {{ data.event_date | date:'Y-m-d' }}</p>
+                <p>Location: {{ data.event_location }}</p>
+                <!-- Add more event details here as needed -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
             </div>
         </div>
-    </div>
-    <div class="pagination justify-content-center">
-        <ul class="pagination mt-2">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1">&laquo; First</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">First</span>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">Previous</span>
-            </li>
-            {% endif %}
-
-            <li class="page-item active">
-                <span class="page-link">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">Next</span>
-            </li>
-            <li class="page-item disabled">
-                <span class="page-link">Last</span>
-            </li>
-            {% endif %}
-        </ul>
     </div>
 </div>
 
 
+=====================
 
-<script>
-    function showProfile() {
-        document.getElementById("profile").classList.remove("d-none");
-        document.getElementById("dashboard").classList.add("d-none");
-    }
 
-    function showDashboard() {
-        document.getElementById("dashboard").classList.remove("d-none");
-        document.getElementById("profile").classList.add("d-none");
-    }
 
-</script>
+   <div class="card mb-3">
+            <div class="card-body">
+               <div class="d-flex align-items-center justify-content-between mb-2">
+                  <div class="d-flex align-items-center">
+                     <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
+                        style="width:55px;">
+                     <div>
+                        <h5 class="card-title mb-0">{{user}}</h5>
+                        <small class="text-muted">Posted {{ data.created_at|timesince }} ago</small>
+                     </div>
+                  </div>
+                  <div class="text-right me-3">
+                     <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
+                  </div>
+               </div>
+               <div class="container  pt-1">
+                  <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
+                  <h5 class="card-title">{{data.event_name}}</h5>
+                  <p class="card-text">{{data.event_description}}</p>
+                  <div class="row">
+                     <div class="col mb-2">
+                        <p class="mb-0 fw-bold">Date : {{data.event_date | date:'Y-m-d' }}</p>
+                     </div>
+                     <div class="col">
+                        <p class="mb-0 fw-bold">Location : {{data.event_location}}</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+<div class="container border border-success mt-4 p-2">
+    {% for data in page_obj.object_list %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Event Name</th>
+      <th scope="col">Event Description</th>
+      <th scope="col">Event Type</th>
+      <th scope="col">Event Date</th>
+      <th scope="col">Event Location</th>
+      <th scope="col">Registration Deadline</th>
+      <th scope="col">Event Capacity</th>
+      <th scope="col">Image</th>
+      <th scope="col">Entry Fees</th>
+      <th scope="col">Event Actions</th>
+      #<th scope="col">Event Location</th>
+      #<th scope="col">Event Location</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{data.event_name}}</td>
+      <td>{{data.event_description}}</td>
+      <td>{{data.event_type}}</td>
+      <td>{{data.event_date}}</td>
+      <td>{{data.event_location}}</td>
+      <td>{{data.event_reg_deadline}}</td>
+      <td>{{data.event_max_capacity}}</td>
+      <td>{{data.event_image}}</td>
+      <td>Not Applicable</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table> {% endfor %}
+</div>
+
+<div class="container border border-success mt-4 p-2">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for data in page_obj.object_list %}
+        <div class="col">
+            <div class="card h-100">
+                <img src="{{data.event_image.url}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{data.event_name}}</h5>
+                    <p class="card-text">{{data.event_description}}</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col mt-3">
+                            <p class=" fw-bold">Date: {{data.event_date | date:'Y-m-d' }}</p>
+                        </div>
+                        <div class="col mt-3">
+                            <p class="fw-bold">Location: {{data.event_location}}</p>
+                        </div>
+                        <div class="col-2 mt-2">
+                            <a href="{% url 'update_event' data.id %}" class="btn btn-secondary">Update</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

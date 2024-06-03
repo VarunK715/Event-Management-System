@@ -60,46 +60,38 @@ def user_logout(request):
     logout(request)
     return render(request,'users/users_logout.html')
 
-def user_profile(request):
+def organizer_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     if request.method == "POST":
         o_form = UserOForm(request.POST,request.FILES,instance=profile)
-        p_form  = UserPForm(request.POST,request.FILES,instance=profile)
         if 'o_save' in request.POST and o_form.is_valid():
             o_instance = o_form.save(commit=False)
             #o_instance.user = request.user
             o_instance.save()
             messages.success(request,f"Account has been updated")
             return redirect('user_profile')
-        
-        elif 'p_save' in request.POST and p_form.is_valid():
+    else:
+        o_form = UserOForm(instance=profile)
+       
+    user_profile_data = Profile.objects.filter(user=request.user)
+
+    return render(request,'users/organizer_profile.html',{'O_form':o_form,'user_profile_data':user_profile_data})
+
+def participant_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    if request.method == "POST":
+        p_form  = UserPForm(request.POST,request.FILES,instance=profile)
+        if 'p_save' in request.POST and p_form.is_valid():
             p_instance = p_form.save(commit=False)
             #p_instance.user = request.user
             p_instance.save()
             messages.success(request,f"Account has been updated")
-            return redirect('user_profile')
+            return redirect('participant_profile')
         
     else:
-        o_form = UserOForm(instance=profile)
         p_form  = UserPForm(instance=profile)
         
     user_profile_data = Profile.objects.filter(user=request.user)
 
-    return render(request,'users/users_profile.html',{'O_form':o_form,'P_form':p_form,'user_profile_data':user_profile_data})
+    return render(request,'users/participant_profile.html',{'P_form':p_form,'user_profile_data':user_profile_data})
 
-
-def user_dashboard(request):
-
-    event_data = EventInfo.objects.filter(user=request.user).order_by('-event_date')
-            # Implement pagination for event data
-    paginator = Paginator(event_data,2)  # Show No.of events per page
-    page_number = request.GET.get('page')
-    try:
-        page_obj = paginator.get_page(page_number)  # returns the desired page object
-    except PageNotAnInteger:
-                # if page_number is not an integer then assign the first page
-        page_obj = paginator.page(1)
-    except EmptyPage:
-                # if page is empty then return last page
-        page_obj = paginator.page(paginator.num_pages)
-    return render(request,'users/user_dashboard.html',{'page_obj':page_obj})

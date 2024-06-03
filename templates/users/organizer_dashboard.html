@@ -2,12 +2,22 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %} Profile -{% endblock %}
+{% block title %} ODashboard -{% endblock %}
 {% block head %}{% endblock head %}
 
 {% block body %}
-<div class="container d-flex">
-    <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addEventModal">Add
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-1" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% endif %}
+</div>
+<div class="container-fluid">
+    <button type="button" class="btn btn-success mt-3 ms-2" data-bs-toggle="modal" data-bs-target="#addEventModal">Add
         Event</button>
     <!-- Modal -->
     <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
@@ -61,6 +71,11 @@
                                 placeholder="Enter maximum capacity">
                         </div>
                         <div class="form-group mb-3">
+                            <label for="maxCapacity">Entry Fees</label>
+                            <input type="number" class="form-control" name="evententryfee" id="maxCapacity"
+                                placeholder="">
+                        </div>
+                        <div class="form-group mb-3">
                             <label for="eventImage">Event Image</label>
                             <input type="file" class="form-control-file" name="eventimage" id="eventImage">
                         </div>
@@ -72,93 +87,40 @@
     </div>
 </div>
 
-<div class="container border border-success mt-4 p-2">
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        {% for data in page_obj.object_list %}
-        <div class="col">
-            <div class="card h-100">
-                <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{data.event_name}} {{data.id}}</h5>
-                    <p class="card-text">{{data.event_description}}</p>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col mt-3">
-                            <p class=" fw-bold">Date: {{data.event_date | date:'Y-m-d' }}</p>
-                        </div>
-                        <div class="col mt-3">
-                            <p class="fw-bold">Location: {{data.event_location}}</p>
-                        </div>
-                        <div class="col-2 mt-2">
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#UpdateEvent">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <div class="modal fade" id="UpdateEvent" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-           <div class="modal-content">
-              <div class="modal-header">
-                 <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                 <form action="{% url 'event_home' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group mb-3">
-                       <label for="eventName">Event Name</label>
-                       <input type="text" name="eventname" class="form-control" id="eventName">
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="eventType">Event Type</label>
-                       <select class="form-control" name="eventtype" id="eventType">
-                          <option value="Technology">Technology</option>
-                          <option value="Wedding">Wedding</option>
-                          <option value="Sports">Sports</option>
-                          <option value="Music">Music</option>
-                          <option value="Art & Culture">Art & Culture</option>
-                          <option value="Business">Business</option>
-                          <option value="Education">Education</option>
-                          <option value="Food & Drink">Food & Drink</option>
-                       </select>
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="eventDate">Event Date</label>
-                       <input type="date" name="eventdate" class="form-control" id="eventDate">
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="eventLocation">Event Location</label>
-                       <input type="text" name="eventlocation" class="form-control" id="eventLocation">
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="eventDescription">Event Description</label>
-                       <textarea class="form-control" name="eventdescription" id="eventDescription" rows="3"></textarea>
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="registrationDeadline">Registration Deadline</label>
-                       <input type="datetime-local" name="eventregdeadline" class="form-control"
-                          id="registrationDeadline">
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="maxCapacity">Maximum Capacity</label>
-                       <input type="number" class="form-control" name="eventmaxcapacity" id="maxCapacity"
-                          placeholder="Enter maximum capacity">
-                    </div>
-                    <div class="form-group mb-3">
-                       <label for="eventImage">Event Image</label>
-                       <input type="file" class="form-control-file" name="eventimage" id="eventImage">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                 </form>
-              </div>
-           </div>
-        </div>
-     </div>
+<div class="container-fluid mt-2" style="width:99%;">
+    <table class="table table-dark table-hover">
+        <thead class="">
+            <tr>
+                <th scope="col">Event Name</th>
+                <th scope="col">Event Description</th>
+                <th scope="col">Event Type</th>
+                <th scope="col">Event Date</th>
+                <th scope="col">Event Location</th>
+                <th scope="col">Registration Deadline</th>
+                <th scope="col">Event Capacity</th>
+                <th scope="col">Event Image</th>
+                <th scope="col">Entry Fees</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in page_obj.object_list %}
+            <tr>
+                <td>{{data.event_name}}</td>
+                <td>{{data.event_description}}</td>
+                <td>{{data.event_type}}</td>
+                <td>{{data.event_date}}</td>
+                <td>{{data.event_location}}</td>
+                <td>{{data.event_reg_deadline}}</td>
+                <td>{{data.event_max_capacity}}</td>
+                <td><img src="{{data.event_image.url}}" class="card-img-top" alt="..."></td>
+                <td>{{data.event_entry_fee}}</td>
+                <td><a href="{% url 'update_event' data.id %}" class="btn btn-secondary">Update</a>
+                    <a href="{% url 'delete_event' data.id %}" class="btn btn-danger mt-2 px-3">Delete</a>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> 
 </div>
 <!--pagination-->
 <div class="pagination justify-content-center mt-3">

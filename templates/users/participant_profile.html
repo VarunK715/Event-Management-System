@@ -1,0 +1,91 @@
+{% extends 'emsapp/ems_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} PProfile -{% endblock %}
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-1" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% endif %}
+</div>
+<!-- Your existing profile information code goes here -->
+<div class="container rounded  border border-danger bg-white mt-5 mb-1">
+    <div class="row">
+        <div class="col-md-3 border">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
+                    width="150px" src="{{ user.profile.image.url }}">
+                <span class="font-weight-bold mt-2">{{user}}</span><span
+                    class="text-black-50">{{user.email}}</span><span> </span>
+            </div>
+        </div>
+        <div class="col-md-9 border">
+            <div class="p-3 py-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 mt-3 ms-4">
+                    <h4 class="text-right card-title">Profile Information</h4>
+                    <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                        data-bs-target="#UpdateProfile">
+                        Update Profile</button>
+                </div>
+                <div class="row ms-4 mt-3">
+                    <div class="card p-2 mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Profile Information</h5>
+                            {% for data in user_profile_data %}
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong class="text-capitalize">Bio : {{data.bio}}</strong>
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong class="text-capitalize">Phone :
+                                            {{data.phone}}</strong>
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong class="text-capitalize">Work :
+                                            {{data.work}}</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="UpdateProfile" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEventModalLabel">Update Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="border p-3" action="{% url 'participant_profile' %}" enctype="multipart/form-data"
+                        method="POST">
+                        {% csrf_token %}
+                        {{P_form|crispy}}
+                        <div class="mt-4 text-center"><button class="btn btn-primary profile-button" name="p_save"
+                                type="submit">Save
+                                Profile</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block footer %}{% endblock %}
+{% endblock %}

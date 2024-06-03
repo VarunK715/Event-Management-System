@@ -1,0 +1,83 @@
+
+{% extends 'emsapp/ems_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} Update Event -{% endblock %}
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-1" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% endif %}
+</div>
+    <div class="modal-dialog modal-lg border p-3 mt-3">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="">Update Event</h5>
+            </div>                    
+            <div class="modal-body">
+                <form action="#" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" name="update_eventname" value="{{update_data.event_name}}" class="form-control" id="eventName">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="eventType">Event Type</label>
+                        <select class="form-control" name="update_eventtype" id="eventType">
+                            <option value="Technology" {% if update_data.event_type == 'Technology' %} selected {% endif %}>Technology</option>
+                            <option value="Wedding" {% if update_data.event_type == 'Wedding' %} selected {% endif %}>Wedding</option>
+                            <option value="Sports" {% if update_data.event_type == 'Sports' %} selected {% endif %}>Sports</option>
+                            <option value="Music" {% if update_data.event_type == 'Music' %} selected {% endif %}>Music</option>
+                            <option value="Art & Culture" {% if update_data.event_type == 'Art & Culture' %} selected {% endif %}>Art & Culture</option>
+                            <option value="Business" {% if update_data.event_type == 'Business' %} selected {% endif %}>Business</option>
+                            <option value="Education" {% if update_data.event_type == 'Education' %} selected {% endif %}>Education</option>
+                            <option value="Food & Drink" {% if update_data.event_type == 'Food & Drink' %} selected {% endif %}>Food & Drink</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="eventDate">Event Date</label>
+                        <input type="date" name="update_eventdate" value="{{update_data.event_date|date:'Y-m-d'}}" class="form-control" id="eventDate">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="eventLocation">Event Location</label>
+                        <input type="text" name="update_eventlocation" value="{{update_data.event_location}}" class="form-control" id="eventLocation">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="eventDescription">Event Description</label>
+                        <textarea class="form-control" name="update_eventdescription" id="eventDescription"
+                            rows="3">{{update_data.event_description}}</textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="registrationDeadline">Registration Deadline</label>
+                        <input type="datetime-local" name="update_eventregdeadline" value="{{formatted_datetime}}" class="form-control"
+                            id="registrationDeadline">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="maxCapacity">Maximum Capacity</label>
+                        <input type="number" class="form-control" name="update_eventmaxcapacity" value="{{update_data.event_max_capacity}}" id="maxCapacity"
+                            placeholder="Enter maximum capacity">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="maxCapacity">Entry Fees</label>
+                        <input type="number" class="form-control" name="update_evententryfee" value="{{update_data.event_entry_fee}}" id="maxCapacity"
+                            placeholder="">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="eventImage">Event Image</label>
+                        <input type="file" class="form-control-file" value="{{update_data.event_image.url}}" name="update_eventimage" id="eventImage">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'emsapp/ems_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} Update Event -{% endblock %}
+{% block head %}
+<style>
+    .event-details {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .event-details img {
+        border-radius: 10px;
+    }
+
+    .book-event-btn {
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+    .container {
+        max-width: 1000px;
+    }
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="container mt-3">
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1>Book an Event and Enjoy...</h1>
+            <p class="text-muted">Join us for an unforgettable experience</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="event-details p-3">
+                <img src="{{book_event_data.event_image.url}}" alt="Event Image" class="img-fluid mb-3">
+                <h3 class="mt-2">{{book_event_data.event_name}}</h3>
+                <p class="text-muted mb-4"><i>{{book_event_data.event_description}}</i></p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Date:</strong> {{book_event_data.event_date}}</li>
+                    <li class="list-group-item"><strong>Location:</strong> {{book_event_data.event_location}}</li>
+                    <li class="list-group-item"><strong>Registration Deadline:</strong>
+                        {{book_event_data.event_reg_deadline}}</li>
+                    <li class="list-group-item"><strong>Max Capacity:</strong> {{book_event_data.event_max_capacity}}
+                    </li>
+                    <li class="list-group-item"><strong>Entry Fees:</strong> {{book_event_data.event_entry_fees}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex flex-column align-items-center justify-content-start">
+            <form action="{% url 'book_event' book_event_data.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-primary book-event-btn mb-3" type="submit">Book Event</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

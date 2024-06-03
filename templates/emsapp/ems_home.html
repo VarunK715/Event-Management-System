@@ -43,10 +43,11 @@
 {% block body %}
 <div class="container  mt-2 d-flex justify-content-between">
    <h3 class="mt-2">Latest Events</h3>
-   <form class="d-flex mt-2" role="search">
+   <form class="d-flex mt-2" role="search" action="{% url 'event_home' %}" method="POST">
+      {% csrf_token %}
       <input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" style="width: 300px;">
       <button class="btn btn-success" name="search" type="submit">Search</button>
-    </form>
+   </form>
 </div>
 
 <div class="container mt-3 ">
@@ -55,37 +56,76 @@
       <div class="col-md-9">
          {% if page_obj.object_list|length == 0 %}
          <div class="card mb-3">
-            <h4 class="p-3 text-muted mt-3">Please add Event </h4>
+            <h4 class="p-3 text-muted mt-3">Please Add Events </h4>
          </div>
          {% endif %}
          {% for data in page_obj.object_list %}
-         <div class="card mb-3">
+         <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">
             <div class="card-body">
-               <div class="d-flex align-items-center justify-content-between mb-2">
+               <div class="d-flex align-items-center justify-content-between mb-2" class="rounded-circle mr-3 me-2">
                   <div class="d-flex align-items-center">
-                     <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
+                     <img src="{{ data.user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
                         style="width:55px;">
                      <div>
-                        <h5 class="card-title mb-0">{{user}}</h5>
+                        <h5 class="card-title mb-0 text-capitalize">{{ data.user.username }}</h5>
                         <small class="text-muted">Posted {{ data.created_at|timesince }} ago</small>
                      </div>
                   </div>
+                  {% if request.user.is_authenticated %}
+                  {% if request.user.role != 'organizer' %}
                   <div class="text-right me-3">
-                     <a href="#" class="btn btn-primary">Book Event</a>
+                     <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
                   </div>
+                  {% endif %}
+                  {% endif %}
+
                </div>
                <div class="container  pt-1">
-                  <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
-                  <h5 class="card-title">{{data.event_name}}</h5>
-                  <p class="card-text">{{data.event_description}}</p>
+                  {% if data.event_image %}
+                  <img src="{{ data.event_image.url }}" alt="{{ event.event_name }}" class="card-img-top mb-3"
+                     style="">
+                  {% else %}
+                  <img src="{{ data.event_image.url }}" alt="Default Image" style="">
+                  {% endif %}
+                  <h5 class="card-title">{{ data.event_name }}</h5>
+                  <p class="card-text">{{ data.event_description|truncatewords_html:30 }} <button type="button"
+                        class="btn btn-link" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">Read
+                        More</button>
+                  </p>
                   <div class="row">
                      <div class="col mb-2">
-                        <p class="mb-0 fw-bold">Date : {{data.event_date | date:'Y-m-d' }}</p>
+                        <p class="mb-0 fw-bold">Date : {{ data.event_date | date:'Y-m-d' }}</p>
                      </div>
                      <div class="col">
-                        <p class="mb-0 fw-bold">Location : {{data.event_location}}</p>
+                        <p class="mb-0 fw-bold">Location : {{ data.event_location }}</p>
                      </div>
                   </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Modal -->
+         <div class="modal fade" id="eventModal{{ data.id }}" tabindex="-1" aria-labelledby="eventModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="eventModalLabel">{{ data.event_name }}</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <img src="{{data.event_image.url}}" class="card-img-top mb-3" alt="Event Image">
+                     <p>{{ data.event_description }}</p>
+                     <p><strong>Date : </strong>{{ data.event_date | date:'Y-m-d' }}</p>
+                     <p><strong>Location : </strong>{{ data.event_location }}</p>
+                     <p><strong>Deadline : </strong>{{data.event_reg_deadline}} </p>
+                     <p><strong>Capacity : </strong>{{data.event_max_capacity}} </p>
+                     <p><strong>Entry Fees : </strong>{{data.event_entry_fee}}</p>
+                     <!-- Add more event details here as needed -->
+                  </div>
+                  <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>-->
                </div>
             </div>
          </div>

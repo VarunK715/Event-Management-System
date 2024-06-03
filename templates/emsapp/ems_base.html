@@ -29,7 +29,7 @@
       <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
         aria-labelledby="offcanvasDarkNavbarLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">EventRoom</h5>
+          <h5 class="offcanvas-title text-capitalize" id="offcanvasDarkNavbarLabel">{{user.username}}</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
         </div>
@@ -50,10 +50,11 @@
               <ul class="dropdown-menu dropdown-menu-dark">
                 {% if request.user.is_authenticated %}
                 {% if request.user.role == "organizer" %}
-                <li><a class="dropdown-item" href="{% url 'user_profile' %}">View Profile</a></li>
-                <li><a class="dropdown-item" href="{% url 'user_dashboard' %}">View Dashboard</a></li>
+                <li><a class="dropdown-item" href="{% url 'organizer_profile' %}">View Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'organizer_dashboard' %}">View Dashboard</a></li>
                 {% else %}
-                <li><a class="dropdown-item" href="{% url 'user_profile' %}">View Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'participant_profile' %}">View Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'participant_dashboard'%}">View Dashboard</a></li>
                 {% endif %}
                 {% endif %}
               </ul>
@@ -68,10 +69,6 @@
             <a class="nav-link " href="{% url 'user_register' %}">Register</a>
           </ul>
           {% endif %}
-          <form class="d-flex mt-3" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success" type="submit">Search</button>
-          </form>
         </div>
       </div>
     </div>

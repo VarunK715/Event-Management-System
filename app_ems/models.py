@@ -12,8 +12,19 @@ class EventInfo(models.Model):
     event_description = models.TextField()
     event_reg_deadline = models.DateTimeField()
     event_max_capacity = models.IntegerField()
-    event_image = models.ImageField(upload_to='event_images/',blank=True,null=True,default='default.png')
+    event_image = models.ImageField(upload_to='event_images/',blank=True,null=True,default='default.jpg')
     created_at = models.DateTimeField(auto_now_add=True)
+    event_entry_fee = models.IntegerField(blank=True,null=True,default=-1)
+
 
     def __str__(self):
         return self.event_name
+
+
+class Booking(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
+    event = models.ForeignKey(EventInfo, on_delete=models.CASCADE, related_name='bookings')
+    booking_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} booked {self.event.event_name}"

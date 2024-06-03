@@ -1,0 +1,93 @@
+{% extends 'emsapp/ems_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %} PDashboard -{% endblock %}
+{% block head %}{% endblock head %}
+
+{% block body %}
+<div class="container-fluid">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-1" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+    {% endif %}
+</div>
+<div class="container-fluid m-3" style="width:99%;">
+<h4>Your Event Details</h4>
+</div>
+<div class="container-fluid mt-2" style="width:99%;">
+    <table class="table table-dark table-hover">
+        <thead class="">
+            <tr>
+                <th scope="col">Event Name</th>
+                <th scope="col">Event Description</th>
+                <th scope="col">Event Date</th>
+                <th scope="col">Event Location</th>
+                <th scope="col">Event Image</th>
+                <th scope="col">Entry Fees</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for events in booked_event_info %}
+            <tr>
+                <td>{{events.event_name}}</td>
+                <td>{{events.event_description}}</td>
+                <td>{{events.event_date}}</td>
+                <td>{{events.event_location}}</td>
+                <td><img src="{{events.event_image.url}}" class="card-img-top" alt="..."></td>
+                <td>{{events.event_entry_fee}}</td>
+                <td><a href="#" class="btn btn-danger mt-2 me-3">Cancel</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> 
+</div>
+<!--pagination
+<div class="pagination justify-content-center mt-3">
+    <ul class="pagination mt-2">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">First</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">Last</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>-->
+{% block footer %}{% endblock %}
+{% endblock %}
