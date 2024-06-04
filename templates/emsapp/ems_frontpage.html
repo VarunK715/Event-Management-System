@@ -3,30 +3,21 @@
 {% block title %} Home -{% endblock %}
 
 {% block head %}
-    <style>
-        .body1{
-            background: url("{% static 'HOME-CONCERT-2.jpg' %}");
-            background-size: cover; 
-            background-position: center;
-            height:400px;
-            width: 1645px;;
-        }
-    </style>
 {% endblock  %}
 
 {% block body %}
 
-<!-- Hero Section -->
-<div class="body1 mt-3 ms-1">
-</div>
 
-<div class=" ms-1 border-danger" style="width:1645px; ">
+<div class="container-fluid mt-1 border-danger">
     <section class="bg-primary text-white py-5">
-        <div class="container text-center">
-            <h1 class="display-4">Discover Exciting Events Near You</h1>
-            <p class="lead">Find, attend, and organize events effortlessly!</p>
+        <div class="container text-center" style="margin-top:105px;height:520px;">
+            <h1 class="display-4 text-black">Explore Amazing Events Around the World!</h1>
+            <h3 class="fw-normal mt-4">Discover what's happening around the world and get involved.</h3> 
+            <p class="lead mt-4"> Connect, participate, and enjoy unforgettable experiences  </p>
             <!-- Add a search bar or call-to-action button -->
-            <a href="{% url 'user_register' %}" class="btn btn-lg btn-info">Get Started</a>
+            <a href="{% url 'user_register' %}" class="btn btn-lg btn-info mt-5">Get Started</a>
+            <p class="lead mt-5 fst-italic text-black">Whether it's music, art, sports, or tech, find events that match your passions. Sign up to create and attend events effortlessly!
+            </p>
         </div>
      </section>
 </div>

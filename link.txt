@@ -1,158 +1,44 @@
-<div class="card mb-3" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">
-    <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="d-flex align-items-center">
-                <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
-                    style="width:55px;">
-                <div>
-                    <h5 class="card-title mb-0">{{ user }}</h5>
-                    <small class="text-muted">Posted {{ data.created_at|timesince }} ago</small>
-                </div>
-            </div>
-            <div class="text-right me-3">
-                <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
-            </div>
-        </div>
-        <div class="container  pt-1">
-            <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
-            <h5 class="card-title">{{ data.event_name }}</h5>
-            <p class="card-text">{{ data.event_description }}</p>
-            <div class="row">
-                <div class="col mb-2">
-                    <p class="mb-0 fw-bold">Date : {{ data.event_date | date:'Y-m-d' }}</p>
-                </div>
-                <div class="col">
-                    <p class="mb-0 fw-bold">Location : {{ data.event_location }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="eventModal{{ data.id }}" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eventModalLabel">{{ data.event_name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
-                <p>{{ data.event_description }}</p>
-                <p>Date: {{ data.event_date | date:'Y-m-d' }}</p>
-                <p>Location: {{ data.event_location }}</p>
-                <!-- Add more event details here as needed -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-=====================
-
-
-
-   <div class="card mb-3">
+  {% for data in page_obj.object_list %}
+         <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">
             <div class="card-body">
-               <div class="d-flex align-items-center justify-content-between mb-2">
+               <div class="d-flex align-items-center justify-content-between mb-2" class="rounded-circle mr-3 me-2">
                   <div class="d-flex align-items-center">
-                     <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
+                     <img src="{{ data.user.profile.image.url }}" alt="Profile Picture" class="rounded-circle mr-3 me-2"
                         style="width:55px;">
                      <div>
-                        <h5 class="card-title mb-0">{{user}}</h5>
+                        <h5 class="card-title mb-0 text-capitalize">{{ data.user.username }}</h5>
                         <small class="text-muted">Posted {{ data.created_at|timesince }} ago</small>
                      </div>
                   </div>
+                  {% if request.user.is_authenticated %}
+                  {% if request.user.role != 'organizer' %}
                   <div class="text-right me-3">
                      <a href="{% url 'book_event' data.id %}" class="btn btn-primary">Book Event</a>
                   </div>
+                  {% endif %}
+                  {% endif %}
+
                </div>
                <div class="container  pt-1">
-                  <img src="{% static 'HOME-CONCERT-2.jpg' %}" class="card-img-top mb-3" alt="Event Image">
-                  <h5 class="card-title">{{data.event_name}}</h5>
-                  <p class="card-text">{{data.event_description}}</p>
+                  {% if data.event_image %}
+                  <img src="{{ data.event_image.url }}" alt="{{ event.event_name }}" class="card-img-top mb-3"
+                     style="">
+                  {% else %}
+                  <img src="{{ data.event_image.url }}" alt="Default Image" style="">
+                  {% endif %}
+                  <h5 class="card-title">{{ data.event_name }}</h5>
+                  <p class="card-text">{{ data.event_description|truncatewords_html:30 }} <button type="button"
+                        class="btn btn-link" data-bs-toggle="modal" data-bs-target="#eventModal{{ data.id }}">Read
+                        More</button>
+                  </p>
                   <div class="row">
                      <div class="col mb-2">
-                        <p class="mb-0 fw-bold">Date : {{data.event_date | date:'Y-m-d' }}</p>
+                        <p class="mb-0 fw-bold">Date : {{ data.event_date | date:'Y-m-d' }}</p>
                      </div>
                      <div class="col">
-                        <p class="mb-0 fw-bold">Location : {{data.event_location}}</p>
+                        <p class="mb-0 fw-bold">Location : {{ data.event_location }}</p>
                      </div>
                   </div>
                </div>
             </div>
          </div>
-
-<div class="container border border-success mt-4 p-2">
-    {% for data in page_obj.object_list %}
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Event Name</th>
-      <th scope="col">Event Description</th>
-      <th scope="col">Event Type</th>
-      <th scope="col">Event Date</th>
-      <th scope="col">Event Location</th>
-      <th scope="col">Registration Deadline</th>
-      <th scope="col">Event Capacity</th>
-      <th scope="col">Image</th>
-      <th scope="col">Entry Fees</th>
-      <th scope="col">Event Actions</th>
-      #<th scope="col">Event Location</th>
-      #<th scope="col">Event Location</th>
-
-
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">{{forloop.counter}}</th>
-      <td>{{data.event_name}}</td>
-      <td>{{data.event_description}}</td>
-      <td>{{data.event_type}}</td>
-      <td>{{data.event_date}}</td>
-      <td>{{data.event_location}}</td>
-      <td>{{data.event_reg_deadline}}</td>
-      <td>{{data.event_max_capacity}}</td>
-      <td>{{data.event_image}}</td>
-      <td>Not Applicable</td>
-      <td></td>
-    </tr>
-  </tbody>
-</table> {% endfor %}
-</div>
-
-<div class="container border border-success mt-4 p-2">
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        {% for data in page_obj.object_list %}
-        <div class="col">
-            <div class="card h-100">
-                <img src="{{data.event_image.url}}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{data.event_name}}</h5>
-                    <p class="card-text">{{data.event_description}}</p>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col mt-3">
-                            <p class=" fw-bold">Date: {{data.event_date | date:'Y-m-d' }}</p>
-                        </div>
-                        <div class="col mt-3">
-                            <p class="fw-bold">Location: {{data.event_location}}</p>
-                        </div>
-                        <div class="col-2 mt-2">
-                            <a href="{% url 'update_event' data.id %}" class="btn btn-secondary">Update</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>

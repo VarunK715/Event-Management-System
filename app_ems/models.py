@@ -12,7 +12,7 @@ class EventInfo(models.Model):
     event_description = models.TextField()
     event_reg_deadline = models.DateTimeField()
     event_max_capacity = models.IntegerField()
-    event_image = models.ImageField(upload_to='event_images/',blank=True,null=True,default='default.jpg')
+    event_image = models.ImageField(upload_to='event_images/',blank=True,null=True,default='default.png')
     created_at = models.DateTimeField(auto_now_add=True)
     event_entry_fee = models.IntegerField(blank=True,null=True,default=-1)
 

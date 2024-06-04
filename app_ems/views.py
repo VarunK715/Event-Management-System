@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from app_ems.models import EventInfo,Booking
 from django.utils import timezone
 from datetime import date,timedelta
@@ -49,7 +49,7 @@ def home(request):
     
             
     # Implement pagination for event data
-    paginator = Paginator(event_data,2)  # Show No.of events per page
+    paginator = Paginator(event_data,5)  # Show No.of events per page
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.get_page(page_number)  # returns the desired page object
@@ -157,15 +157,28 @@ def update_event(request,id):
 
 @login_required(login_url='users_login')
 def book_event(request,id):
-    book_event_data = EventInfo.objects.get(id=id)
-    if request.method=="POST":
-        booking_instance = Booking(user_id=request.user.id,event_id=book_event_data.id)
-        booking_instance.save()
-        messages.success(request,f"Event is booked successfully.")
-        return redirect('participant_dashboard')    
+    book_event_data = EventInfo.objects.get(id=id)    
     return render(request,'emsapp/book_event.html',{'book_event_data':book_event_data})
 
 
 def delete_event(request,id):
     EventInfo.objects.filter(id=id).delete()
     return redirect('organizer_dashboard')
+
+
+def cancel_event(request,id):
+    Booking.objects.filter(event_id=id).delete()
+    return redirect('organizer_dashboard')
+
+
+def payment_page(request,id):
+    payment_data = get_object_or_404(EventInfo, id=id)
+
+    if request.method=="POST":
+        print(f"erros == {request.POST}")
+        booking_instance = Booking(user_id=request.user.id,event_id=payment_data.id)
+        booking_instance.save()
+        messages.success(request,f"Event is booked successfully.")
+        return redirect('participant_dashboard') 
+
+    return render(request,'emsapp/payment_page.html',{'payment_data':payment_data})
