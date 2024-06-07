@@ -100,6 +100,7 @@
                 <th scope="col">Event Capacity</th>
                 <th scope="col">Event Image</th>
                 <th scope="col">Entry Fees</th>
+                <th scope="col">Total Booked</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -115,6 +116,7 @@
                 <td>{{data.event_max_capacity}}</td>
                 <td><img src="{{data.event_image.url}}" class="card-img-top" alt="..."></td>
                 <td>{{data.event_entry_fee}}</td>
+                <td>{{data.total_booking}}</td>
                 <td><a href="{% url 'update_event' data.id %}" class="btn btn-secondary">Update</a>
                     <a href="{% url 'delete_event' data.id %}" class="btn btn-danger mt-2 px-3">Delete</a>
             </tr>

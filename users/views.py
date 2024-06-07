@@ -73,7 +73,7 @@ def organizer_profile(request):
     else:
         o_form = UserOForm(instance=profile)
        
-    user_profile_data = Profile.objects.filter(user=request.user)
+    user_profile_data = Profile.objects.get(user=request.user)
 
     return render(request,'users/organizer_profile.html',{'O_form':o_form,'user_profile_data':user_profile_data})
 
@@ -91,7 +91,7 @@ def participant_profile(request):
     else:
         p_form  = UserPForm(instance=profile)
         
-    user_profile_data = Profile.objects.filter(user=request.user)
+    user_profile_data = Profile.objects.get(user=request.user)
 
     return render(request,'users/participant_profile.html',{'P_form':p_form,'user_profile_data':user_profile_data})
 

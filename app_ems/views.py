@@ -119,9 +119,9 @@ def participant_dashboard(request,):
     booked_events = EventInfo.objects.filter(id__in=booked_event_ids)
     return render(request,'users/participant_dashboard.html',{'booked_event_info':booked_events})
 
-
+@login_required(login_url='users_login')
 def update_event(request,id):
-    update_data = EventInfo.objects.get(id=id)
+    update_data = get_object_or_404(EventInfo,id=id)
     formatted_datetime = update_data.event_reg_deadline.strftime('%Y-%m-%dT%H:%M:%S')
     if 'update_eventname' in request.POST:
             update_event_name= request.POST.get('update_eventname')
@@ -160,20 +160,19 @@ def book_event(request,id):
     book_event_data = EventInfo.objects.get(id=id)    
     return render(request,'emsapp/book_event.html',{'book_event_data':book_event_data})
 
-
+@login_required(login_url='users_login')
 def delete_event(request,id):
     EventInfo.objects.filter(id=id).delete()
     return redirect('organizer_dashboard')
 
-
+@login_required(login_url='users_login')
 def cancel_event(request,id):
     Booking.objects.filter(event_id=id).delete()
     return redirect('organizer_dashboard')
 
-
+@login_required(login_url='users_login')
 def payment_page(request,id):
     payment_data = get_object_or_404(EventInfo, id=id)
-
     if request.method=="POST":
         print(f"erros == {request.POST}")
         booking_instance = Booking(user_id=request.user.id,event_id=payment_data.id)

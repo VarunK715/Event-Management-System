@@ -45,8 +45,8 @@
    <h3 class="mt-2 fw-normal">Latest Events</h3>
    <form class="d-flex mt-2" role="search" action="{% url 'event_home' %}" method="POST">
       {% csrf_token %}
-      <input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" style="width: 300px;">
-      <button class="btn btn-success" name="search" type="submit">Search</button>
+      <input class="form-control me-3" type="search" name="search" placeholder="Search" aria-label="Search" style="width: 300px;">
+      <button class="btn btn-success" name="" type="submit">Search</button>
    </form>
 </div>
 

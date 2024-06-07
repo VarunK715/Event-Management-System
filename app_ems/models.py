@@ -15,6 +15,7 @@ class EventInfo(models.Model):
     event_image = models.ImageField(upload_to='event_images/',blank=True,null=True,default='default.png')
     created_at = models.DateTimeField(auto_now_add=True)
     event_entry_fee = models.IntegerField(blank=True,null=True,default=-1)
+    total_booking = models.IntegerField(default=0)
 
 
     def __str__(self):
@@ -28,3 +29,16 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} booked {self.event.event_name}"
+    
+    def save(self, *args, **kwargs):
+        # Increment total_booking count on event
+        if not self.pk:
+            self.event.total_booking += 1
+            self.event.save()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Decrement total_booking count on event
+        self.event.total_booking -= 1
+        self.event.save()
+        super().delete(*args, **kwargs)

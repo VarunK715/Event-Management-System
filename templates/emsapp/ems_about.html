@@ -1,11 +1,109 @@
 {% extends 'emsapp/ems_base.html' %}
 {% block title %} About -{% endblock %}
 {% load static %}
-{% block head %}{% endblock  %}
+{% block head %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .header {
+        background-color: #007bff;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+    }
+    .content {
+        padding: 20px;
+    }
+    .feature-icon {
+        font-size: 2rem;
+        margin-right: 10px;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+</style>
+
+{% endblock  %}
 
 
 {% block body %}
-<div class="container">
-    <h4>About us</h4>
+
+
+<div class="header mt-1">
+    <h1>About Our Event Management System</h1>
 </div>
+
+<div class="container content">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Introduction</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>Our Event Management System simplifies event management for both organizers and participants, providing a user-friendly platform to create, manage, and engage with events efficiently.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Roles and Features</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="feature-icon fas fa-user-tie"></i> Organizers</h5>
+                    <p class="card-text">Organizers can create, update, and delete events with ease. They have access to a dedicated dashboard where they can manage all aspects of their events, from scheduling to participant communication.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="feature-icon fas fa-users"></i> Participants</h5>
+                    <p class="card-text">Participants can browse and book events through a user-friendly interface. They have their own dashboard where they can track their upcoming events, view event details, and manage their bookings.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="feature-icon fas fa-columns"></i> Dashboards</h5>
+                    <p class="card-text">Both organizers and participants have separate dashboards tailored to their needs, providing quick access to relevant information and actions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Authentication and Security</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>We prioritize the security of our users by implementing robust authentication features, including secure login processes and data encryption. User data and event details are safeguarded against unauthorized access.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Pagination</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>Our platform uses efficient pagination to display events, ensuring a smooth and user-friendly browsing experience. Users can easily navigate through multiple events without overwhelming page load times.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2>Profile Pages</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>Both organizers and participants have personalized profile pages. Organizers can view and manage the events they have created, while participants can view and manage the events they have booked. This ensures that all users have quick access to their relevant activities and information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock  %}

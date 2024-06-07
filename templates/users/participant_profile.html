@@ -19,15 +19,15 @@
 <!-- Your existing profile information code goes here -->
 <div class="container rounded  border border-danger bg-white mt-5 mb-1">
     <div class="row">
-        <div class="col-md-3 border">
+        <div class="col-md-3 ">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5"
                     width="150px" src="{{ user.profile.image.url }}">
                 <span class="font-weight-bold mt-2">{{user}}</span><span
                     class="text-black-50">{{user.email}}</span><span> </span>
             </div>
         </div>
-        <div class="col-md-9 border">
-            <div class="p-3 py-4">
+        <div class="col-md-9 ">
+            <div class="p-3 py-4 ">
                 <div class="d-flex justify-content-between align-items-center mb-3 mt-3 ms-4">
                     <h4 class="text-right card-title">Profile Information</h4>
                     <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
@@ -35,30 +35,27 @@
                         Update Profile</button>
                 </div>
                 <div class="row ms-4 mt-3">
-                    <div class="card p-2 mt-3">
+                    <div class="card p-2 mt-3 border border-danger">
                         <div class="card-body">
-                            <h5 class="card-title">Profile Information</h5>
-                            {% for data in user_profile_data %}
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item border-0">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <strong class="text-capitalize">Bio : {{data.bio}}</strong>
+                                        <strong class="text-capitalize">Bio : {{user_profile_data.bio}}</strong>
                                     </div>
                                 </li>
                                 <li class="list-group-item border-0">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <strong class="text-capitalize">Phone :
-                                            {{data.phone}}</strong>
+                                            {{user_profile_data.phone}}</strong>
                                     </div>
                                 </li>
                                 <li class="list-group-item border-0">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <strong class="text-capitalize">Work :
-                                            {{data.work}}</strong>
+                                            {{user_profile_data.work}}</strong>
                                     </div>
                                 </li>
                             </ul>
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
